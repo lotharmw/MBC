@@ -25,9 +25,16 @@ function addCloseBtn() {
 
 // Add a "checked" symbol when clicking on a list item
 let list = document.querySelector('ul');
+let innertxt = document.querySelector('.newtxt');
 list.addEventListener('click', function(ev) {
     if (ev.target.tagName === 'LI') {
         ev.target.classList.toggle('checked');
+    }
+    initialState();
+}, false);
+list.addEventListener('click', function(ev) {
+    if (ev.target.className === 'newtxt') {
+        ev.target.parentElement.classList.toggle('checked');
     }
     initialState();
 }, false);
@@ -35,9 +42,12 @@ list.addEventListener('click', function(ev) {
 // Create a new list item when clicking on the "Add" button
 function newElement() {
     let li = document.createElement("li");
+    let divtxt = document.createElement("div");
     let inputValue = document.getElementById("myInput").value;
     let t = document.createTextNode(inputValue);
-    li.appendChild(t);
+    divtxt.classList.add("newtxt");
+    divtxt.appendChild(t);
+    li.appendChild(divtxt);
     if (inputValue === '') {
         alert("You must write something!");
     } else {
@@ -52,7 +62,7 @@ function newElement() {
     li.appendChild(span);
 
     let toDoInfo = {
-        "task": li.innerText,
+        "task": divtxt.innerText,
         "completed": li.classList.contains("checked")
     };
 
@@ -75,7 +85,10 @@ function loadToDO(){
     toDos = JSON.parse(localStorage.getItem("toDos"))
     for (let i = 0; i < toDos.length; i++) {
         let newElement = document.createElement("LI"); 
-        newElement.innerHTML = toDos[i].task;
+        let divtxt = document.createElement("DIV");
+        divtxt.classList.add("newtxt");
+        newElement.appendChild(divtxt);
+        divtxt.innerHTML = toDos[i].task;
         if (toDos[i].completed) {
             newElement.classList.add('checked')
         }
@@ -89,10 +102,10 @@ function initialState(){
     let toDoItem = list.children.item(i);
 
     let toDoInfo = {
-        "task": toDoItem.innerHTML,
+        "task": toDoItem.querySelector(".newtxt")?.innerHTML,
         "completed": toDoItem.classList.contains("checked")
     };
-    console.log(toDoItem.innerHTML);
+    console.log(toDoItem.querySelector(".newtxt"));
 
     toDos.push(toDoInfo);
     saveToDo();
